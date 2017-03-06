@@ -10,7 +10,7 @@ There are two directories:
           - <i>python -m SimpleHTTPServer 8000</i>
           - navigate to <a href="http://localhost:8000">http://localhost:8000</a>
   - <b>server</b>
-      - contains the executable API server and a full unit test suite to validate all methods included in the API
+      - contains the executable API server and a full unit test suite to validate all endpoints included in the API
       - to run the test suite
           - <i>cd server</i>
           - <i>go test -v</i>
