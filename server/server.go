@@ -567,14 +567,14 @@ func PostThermostat(req *fasthttp.RequestCtx) {
 	// add new thermostat based on the desired state given
 	newId := home.AddThermostat(desired)
 
-	req.SetStatusCode(http.StatusOK)
-
 	newThermostat, err := home.Thermostat(newId)
 	if err != nil {
 		req.SetStatusCode(http.StatusBadRequest)
 		sendJSON(req, err)
 		return
 	}
+
+	req.SetStatusCode(http.StatusOK)
 
 	// send back the new thermostat so the client has access to the new id
 	sendJSON(req, newThermostat)
