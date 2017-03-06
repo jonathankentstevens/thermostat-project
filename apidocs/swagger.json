@@ -1,0 +1,248 @@
+{
+    "swagger": "2.0",
+    "host": "localhost",
+    "basePath": "/v1",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "Thermostats"
+        }
+    ],
+    "info": {
+        "title": "Thermostat API",
+        "version": "1.0.0",
+        "description": "The Thermostat API allows users to access data about their thermostats\n\n## Limits\nThere are none. Have at it.\n\n## Security\nThere is none. Be nice.\n\n## REST\nAll of our URLs are\n[RESTful](http://en.wikipedia.org/wiki/Representational_state_transfer).\nEvery endpoint (URL) may support between one and four different HTTP verbs. GET\nrequests fetch information about an object, POST requests create objects,\nPUT requests update objects, and finally DELETE requests will delete\nobjects.\n\n## Requests\nA sample GET endpoint to return a the current state of all thermostats: \n```\nGET https://localhost:8080/v1/thermostats\n\n```\n"
+    },
+    "paths": {
+        "/thermostats": {
+            "get": {
+                "summary": "return all thermostats in the home",
+                "tags": [
+                    "Thermostats"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Thermostat"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "post": {
+                "summary": "add new thermostat",
+                "tags": [
+                    "Thermostats"
+                ],
+                "parameters": [
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "description": "JSON containing new thermostat spec",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateThermostat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Thermostat"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/thermostats/{id}": {
+            "get": {
+                "summary": "return single thermostat based on id",
+                "tags": [
+                    "Thermostats"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "type": "integer",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Thermostat"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            },
+            "put": {
+                "summary": "bulk update a specific thermostat",
+                "tags": [
+                    "Thermostats"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "type": "integer",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "json",
+                        "in": "body",
+                        "required": true,
+                        "description": "JSON containing update spec",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateThermostat"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/thermostats/{id}/{field}": {
+            "get": {
+                "summary": "return single field of a thermostat",
+                "tags": [
+                    "Thermostats"
+                ],
+                "description": "Valid field options are: name, currentTemp, mode, coolSetPoint, heatSetPoint, or fan\n",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "type": "integer",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "name": "field",
+                        "type": "string",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "UpdateThermostat": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "New name of thermostat"
+                },
+                "mode": {
+                    "type": "string",
+                    "description": "New operating mode - heat, cool, or off"
+                },
+                "coolSetPoint": {
+                    "type": "integer",
+                    "description": "New cold setting - between 30 & 100"
+                },
+                "heatSetPoint": {
+                    "type": "integer",
+                    "description": "New heat setting - between 30 & 100"
+                },
+                "fan": {
+                    "type": "string",
+                    "description": "New fan mode - auto or on"
+                }
+            }
+        },
+        "Thermostat": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "Unique identifier"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name given to the thermostat"
+                },
+                "currentTemp": {
+                    "type": "string",
+                    "description": "Current temperature on the thermostat"
+                },
+                "previousTemp": {
+                    "type": "string",
+                    "description": "Previous temperature on the thermostat"
+                },
+                "operatingMode": {
+                    "type": "string",
+                    "description": "Mode set on the thermostat of either heat, cool, or off"
+                },
+                "coolSetPoint": {
+                    "type": "integer",
+                    "description": "The temperature set"
+                },
+                "heatSetPoint": {
+                    "type": "integer",
+                    "description": "The temperature set"
+                },
+                "fanMode": {
+                    "type": "string",
+                    "description": "Fan mode"
+                },
+                "lastChanged": {
+                    "type": "datetime",
+                    "description": "Last time settings on the thermostat changed"
+                }
+            }
+        }
+    }
+}
