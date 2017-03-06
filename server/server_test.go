@@ -293,27 +293,28 @@ func TestPostThermostat(t *testing.T) {
 	}
 	resp.Body.Close()
 
-	newId, err := strconv.Atoi(string(b))
-	if err != nil {
-		t.Fatalf("invalid id returned: %s", err)
-	}
-
 	var th *thermostat
-	get("http://localhost:8080/v1/thermostats/"+strconv.Itoa(newId), t, &th)
+	err = json.Unmarshal(b, &th)
+	if err != nil {
+		t.Fatalf("failed to unmarshal response body into thermostat: %s", err)
+	}
 
-	if th.Name != "Basement Thermostat" {
-		t.Fatalf("expected name to be %s, got %s", "Basement Thermostat", th.Name)
+	var thCheck *thermostat
+	get("http://localhost:8080/v1/thermostats/"+strconv.Itoa(th.Id), t, &thCheck)
+
+	if thCheck.Name != "Basement Thermostat" {
+		t.Fatalf("expected name to be %s, got %s", "Basement Thermostat", thCheck.Name)
 	}
-	if th.CoolSetPoint != 72 {
-		t.Fatalf("expected cool set point to be %d, got %d", 72, th.CoolSetPoint)
+	if thCheck.CoolSetPoint != 72 {
+		t.Fatalf("expected cool set point to be %d, got %d", 72, thCheck.CoolSetPoint)
 	}
-	if th.HeatSetPoint != 68 {
-		t.Fatalf("expected heat set point to be %d, got %d", 68, th.HeatSetPoint)
+	if thCheck.HeatSetPoint != 68 {
+		t.Fatalf("expected heat set point to be %d, got %d", 68, thCheck.HeatSetPoint)
 	}
-	if th.OperatingMode != "heat" {
-		t.Fatalf("expected operating mode to be %s, got %s", "heat", th.OperatingMode)
+	if thCheck.OperatingMode != "heat" {
+		t.Fatalf("expected operating mode to be %s, got %s", "heat", thCheck.OperatingMode)
 	}
-	if th.FanMode != "on" {
-		t.Fatalf("expected fan mode to be %s, got %s", "on", th.FanMode)
+	if thCheck.FanMode != "on" {
+		t.Fatalf("expected fan mode to be %s, got %s", "on", thCheck.FanMode)
 	}
 }

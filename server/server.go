@@ -31,9 +31,9 @@ type thermostat struct {
 type updateThermostat struct {
 	Name          string `json:"name"`
 	Temperature   int    `json:"currentTemp"` // only included to provide proper error if included
+	OperatingMode string `json:"mode"`
 	CoolSetPoint  int    `json:"coolSetPoint"`
 	HeatSetPoint  int    `json:"heatSetPoint"`
-	OperatingMode string `json:"mode"`
 	FanMode       string `json:"fan"`
 }
 
