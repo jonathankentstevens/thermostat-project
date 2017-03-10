@@ -300,7 +300,7 @@ func TestPostThermostat(t *testing.T) {
 	}
 
 	var thCheck *thermostat
-	get("http://localhost:8080/v1/thermostats/"+strconv.Itoa(th.Id), t, &thCheck)
+	get("http://localhost:8080/v1/thermostats/"+strconv.Itoa(th.ID), t, &thCheck)
 
 	if thCheck.Name != "Basement Thermostat" {
 		t.Fatalf("expected name to be %s, got %s", "Basement Thermostat", thCheck.Name)

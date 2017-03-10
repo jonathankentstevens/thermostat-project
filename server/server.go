@@ -16,7 +16,7 @@ import (
 // thermostat holds all data pertaining to a single unit. The fields must be exported in order to be
 // handled by the json Unmarshaler/Marshaler interfaces
 type thermostat struct {
-	Id            int       `json:"id"`
+	ID            int       `json:"id"`
 	Name          string    `json:"name"`
 	CurrentTemp   int       `json:"currentTemp"`
 	PreviousTemp  int       `json:"previousTemp"`
@@ -78,17 +78,17 @@ var (
 	validOpModes  []string
 	validFanModes []string
 	validFields   []string
-	minCoolSetPt  int = 30
-	maxCoolSetPt  int = 100
-	minHeatSetPt  int = 30
-	maxHeatSetPt  int = 100
+	minCoolSetPt  = 30
+	maxCoolSetPt  = 100
+	minHeatSetPt  = 30
+	maxHeatSetPt  = 100
 )
 
 func init() {
 	// initialize the initial state of the home with generic values for both thermostats
 	home.thermostats = make(map[int]*thermostat)
 	home.thermostats[1] = &thermostat{
-		Id:            1,
+		ID:            1,
 		Name:          defaultName1,
 		CurrentTemp:   71,
 		OperatingMode: defaultOpMode1,
@@ -98,7 +98,7 @@ func init() {
 		LastChanged:   time.Now(),
 	}
 	home.thermostats[2] = &thermostat{
-		Id:            2,
+		ID:            2,
 		Name:          defaultName2,
 		CurrentTemp:   72,
 		OperatingMode: defaultOpMode2,
@@ -136,7 +136,7 @@ func (home *currentState) UpdateThermostat(target *thermostat, desired updateThe
 	home.Lock()
 
 	updated := &thermostat{
-		Id: target.Id,
+		ID: target.ID,
 	}
 
 	// make sure new name isn't empty before changing
@@ -183,7 +183,7 @@ func (home *currentState) UpdateThermostat(target *thermostat, desired updateThe
 
 	// set the last time the thermostat's settings were changed to now
 	updated.LastChanged = time.Now()
-	home.thermostats[target.Id] = updated
+	home.thermostats[target.ID] = updated
 
 	home.Unlock()
 }
@@ -198,17 +198,17 @@ func (home *currentState) AddThermostat(desired updateThermostat) int {
 		ints = append(ints, key)
 	}
 	sort.Ints(ints)
-	newId := ints[len(ints)-1] + 1 // +1 because our first id starts at 1, not 0
+	newID := ints[len(ints)-1] + 1 // +1 because our first id starts at 1, not 0
 
 	updated := &thermostat{
-		Id: newId,
+		ID: newID,
 	}
 
 	// set default name if not provided
 	if desired.Name != "" {
 		updated.Name = desired.Name
 	} else {
-		updated.Name = "Thermostat #" + strconv.Itoa(newId)
+		updated.Name = "Thermostat #" + strconv.Itoa(newID)
 	}
 
 	// set operating mode to 'off' if not provided
@@ -247,10 +247,10 @@ func (home *currentState) AddThermostat(desired updateThermostat) int {
 
 	// set the last time the thermostat's settings were changed to now
 	updated.LastChanged = time.Now()
-	home.thermostats[newId] = updated
+	home.thermostats[newID] = updated
 	home.Unlock()
 
-	return newId
+	return newID
 }
 
 // sendJSON sends the provided data back to the client as a json byte array
@@ -471,9 +471,9 @@ func PostThermostat(req *fasthttp.RequestCtx) {
 	}
 
 	// add new thermostat based on the desired state given
-	newId := home.AddThermostat(desired)
+	newID := home.AddThermostat(desired)
 
-	newThermostat, err := home.Thermostat(newId)
+	newThermostat, err := home.Thermostat(newID)
 	if err != nil {
 		req.SetStatusCode(http.StatusBadRequest)
 		sendJSON(req, err)
